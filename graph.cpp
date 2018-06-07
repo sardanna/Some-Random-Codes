@@ -112,6 +112,31 @@ class graph{
 
 
       }
+      void removeNode(T name){							//Removes a node by name
+          int ind = getIndex(name);
+          nodes.erase(name);
+          indices.erase(ind);
+      }
+      void removeDirectedEdge(T source,T destination){				//Removes an edge by source and destination
+          int ct = -1;
+          int index_source = getIndex(source);
+          int index_destination = getIndex(destination);
+          for(int i = 0;i<grph[index_source].size();i++){
+            ct++;
+            if(grph[index_source][i] == index_destination)
+            break;            
+            }
+            if(ct == -1){
+             throw invalid_argument("Edge not present for");
+            }
+            else
+          grph[index_source].erase(grph[index_source].begin()+ct);
+          }
+      
+      void removeUndirectedEdge(T source, T destination){
+        removeDirectedEdge(source,destination);
+        removeDirectedEdge(destination,source);
+      }
 /*
 * Returns a vector with nodes in the order of Breadth first Search
 * Can be called without any argument, default will be root
@@ -129,8 +154,9 @@ class graph{
                             tmp = q.front();
                             q.pop();
                             output.push_back(getNodeName(tmp));
+                            //cout<<getNodeName(tmp)<<" ";
         for(int i = 0;i < grph[tmp].size();i++){
-           if(visited.find(grph[tmp][i]) == visited.end()){
+           if( indices.find(grph[tmp][i]) != indices.end() and visited.find(grph[tmp][i]) == visited.end()){
                             q.push(grph[tmp][i]);
                             visited[grph[tmp][i]] = true;
                                     }
@@ -153,5 +179,8 @@ class graph{
     gg.insertUnDirectedEdge('b','e');
     gg.insertUnDirectedEdge('c','f');
     gg.setRoot('a');
-	gg.bfs();
+    vector<char> op;	   
+    op = gg.bfs();							//print op to see the output
+    gg.removeDirectedEdge('b','d');
+    op = gg.bfs();
 }
